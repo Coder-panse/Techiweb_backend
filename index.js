@@ -8,7 +8,7 @@ const mailrouter = require('./routes/mailroute');
 app.use(cors())
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
-console.log(process.env.SECRET_KEY)
+// console.log(process.env.SECRET_KEY)
 
 
 
