@@ -101,7 +101,7 @@ const sendMail = async (req, res) => {
 
     const result = await resend.emails.send({
       from: `Acme <onboarding@resend.dev>`,
-      to: ['gharshadpanse123@gmail.com'],
+      to: ['info@techiweb.in'],
       subject: `New Job Application - ${jobRole}`,
       html: `
         <h2>New Job Application Received</h2>
