@@ -88,8 +88,44 @@ const sendMail = async (req, res) => {
 
 
 
-  const applyForJob=(req,res)=>{
-   console.log(req.body)
+  const applyForJob=async(req,res)=>{
+   try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY); 
+    const { fullName, email, phone, jobRole } = req.body;
+    const resumeFile = req.file;
+
+    if (!resumeFile) {
+      return res.status(400).json({ error: "Resume file missing" });
+    }
+
+    const result = await resend.emails.send({
+      from: `Acme <onboarding@resend.dev>`,
+      to: ['gharshadpanse123@gmail.com'],
+      subject: `New Job Application - ${jobRole}`,
+      html: `
+        <h2>New Job Application Received</h2>
+        <p><strong>Name:</strong> ${fullName}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Job Role:</strong> ${jobRole}</p>
+      `,
+      attachments: [
+        {
+          filename: resumeFile.originalname,
+          content: resumeFile.buffer.toString("base64"),
+          encoding: "base64"
+        }
+      ]
+    });
+
+   if(result){
+     res.json({ success: true, message: "Application submitted", result });
+   }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
   }
 
   module.exports={sendMail,applyForJob}
